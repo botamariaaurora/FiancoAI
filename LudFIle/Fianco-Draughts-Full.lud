@@ -45,31 +45,23 @@
                         (to if:(is Empty (to)))
                         (then
                             (if
-                                (is In (last To) (sites Next))
-                                (promote
-                                    (last To)
-                                    (piece "DoubleCounter")
-                                    Mover
-                                )
-                                (if
-                                    (can
-                                        Move
-                                        (move
-                                            Hop
-                                            (from (last To))
-                                            (directions { FR FL })
-                                            (between
-                                                if:(is
-                                                    Enemy
-                                                    (who at:(between))
-                                                )
-                                                (apply (remove (between)))
+                                (can
+                                    Move
+                                    (move
+                                        Hop
+                                        (from (last To))
+                                        (directions { FR FL })
+                                        (between
+                                            if:(is
+                                                Enemy
+                                                (who at:(between))
                                             )
-                                            (to if:(is Empty (to)))
+                                            (apply (remove (between)))
                                         )
+                                        (to if:(is Empty (to)))
                                     )
-                                    (moveAgain)
                                 )
+                                (moveAgain)
                             )
                         )
                     )
@@ -129,40 +121,32 @@
                                     (to if:(is Empty (to)))
                                     (then
                                         (if
-                                            (is In (last To) (sites Next))
-                                            (promote
-                                                (last To)
-                                                (piece "DoubleCounter")
-                                                Mover
-                                            )
-                                            (if
-                                                (can
-                                                    Move
-                                                    (move
-                                                        Hop
-                                                        (from (last To))
-                                                        (directions { FR FL })
-                                                        (between
-                                                            if:(is
-                                                                Enemy
-                                                                (who
-                                                                    at:(between
-                                                                    )
-                                                                )
-                                                            )
-                                                            (apply
-                                                                (remove
-                                                                    (between)
+                                            (can
+                                                Move
+                                                (move
+                                                    Hop
+                                                    (from (last To))
+                                                    (directions { FR FL })
+                                                    (between
+                                                        if:(is
+                                                            Enemy
+                                                            (who
+                                                                at:(between
                                                                 )
                                                             )
                                                         )
-                                                        (to
-                                                            if:(is Empty (to))
+                                                        (apply
+                                                            (remove
+                                                                (between)
+                                                            )
                                                         )
                                                     )
+                                                    (to
+                                                        if:(is Empty (to))
+                                                    )
                                                 )
-                                                (moveAgain)
                                             )
+                                            (moveAgain)
                                         )
                                     )
                                 )
@@ -224,16 +208,6 @@
                                         { Forward Leftward Rightward }
                                     )
                                     (to if:(is Empty (to)))
-                                )
-                                (then
-                                    (if
-                                        (is In (last To) (sites Next))
-                                        (promote
-                                            (last To)
-                                            (piece "DoubleCounter")
-                                            Mover
-                                        )
-                                    )
                                 )
                             )
                             (forEach
