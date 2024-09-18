@@ -246,7 +246,6 @@
                 )
             )
         )
-        (end (if (no Moves Next) (result Mover Win)))
+        (end (if (is In (last To) (sites Next)) (result Mover Win)))
     )
 )
-
