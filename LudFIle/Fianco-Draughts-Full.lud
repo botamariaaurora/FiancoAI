@@ -17,7 +17,7 @@
                     "Counter1"
                     (difference
                         (expand (union (sites Bottom) (sites {"B2" "H2" "C3" "G3" "D4" "F4"})) steps:(- 1 1))
-                        (sites Phase 3)
+                        (sites Phase 2)
                     )
                 )
                 (place
@@ -112,6 +112,6 @@
                 )
             )
         )
-        (end (if (is In (last To) (sites Next)) (result Mover Win)))
+        (end (if (or (is In (last To) (sites Next)) (no Moves Next)) (result Mover Win)))
     )
 )
