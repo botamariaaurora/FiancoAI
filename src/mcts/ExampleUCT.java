@@ -33,6 +33,7 @@ public class ExampleUCT extends AI
 	 */
 	public ExampleUCT()
 	{
+		System.out.println("We Are starting simple UCT");
 		this.friendlyName = "Example UCT";
 	}
 	
@@ -48,6 +49,8 @@ public class ExampleUCT extends AI
 		final int maxDepth
 	)
 	{
+		System.out.println("We Are starting simple UCT");
+
 		// Start out by creating a new root node (no tree reuse in this example)
 		final Node root = new Node(null, null, context);
 		
@@ -65,6 +68,8 @@ public class ExampleUCT extends AI
 			!wantsInterrupt								// Respect GUI user clicking the pause button
 		)
 		{
+			System.out.println("How deep daddy");
+			System.out.println(numIterations);
 			// Start in root node
 			Node current = root;
 			
