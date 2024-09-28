@@ -31,17 +31,7 @@ public class LaunchLudii
 			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
 		if (!AIRegistry.registerAI("Maria Alpha-BetaAI", () -> {return new AlphaBetaAI();}, (game) -> {return true;}))
 			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
-//		if (!AIRegistry.registerAI("Example DUCT", () -> {return new AlphaBetaAI();}, (game) -> {return new ExampleDUCT().supportsGame(game);}))
-//			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
-		// Register my Alphabeta
-//		if (!AIRegistry.registerAI(
-//				"Maria Alpha-BetaAI", () -> {
-//					return new AlphaBetaAI();
-//					}, (game) -> {return true;
-//				}
-//				)
-//		)
-//			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
+
 //		// Run Ludii
 		StartDesktopApp.main(new String[0]);
 	}
