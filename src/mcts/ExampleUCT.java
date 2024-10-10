@@ -68,8 +68,6 @@ public class ExampleUCT extends AI
 			!wantsInterrupt								// Respect GUI user clicking the pause button
 		)
 		{
-			System.out.println("How deep daddy");
-			System.out.println(numIterations);
 			// Start in root node
 			Node current = root;
 			

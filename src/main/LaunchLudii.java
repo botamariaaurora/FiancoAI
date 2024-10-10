@@ -5,7 +5,7 @@ import Search.AlphaBetaAI;
 import app.StartDesktopApp;
 import mcts.ExampleDUCT;
 import mcts.ExampleUCT;
-import random.RandomAI;
+//import random.RandomAI;
 import utils.AIRegistry;
 
 /**
@@ -24,11 +24,11 @@ public class LaunchLudii
 	public static void main(final String[] args)
 	{
 		// Register prof example AIs
-		if (!AIRegistry.registerAI("Example Random AI", () -> {return new RandomAI();}, (game) -> {return true;}))
-			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
+//		if (!AIRegistry.registerAI("Example Random AI", () -> {return new RandomAI();}, (game) -> {return true;}))
+//			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
 
-		if (!AIRegistry.registerAI("Example UCT", () -> {return new ExampleUCT();}, (game) -> {return new ExampleUCT().supportsGame(game);}))
-			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
+//		if (!AIRegistry.registerAI("Example UCT", () -> {return new ExampleUCT();}, (game) -> {return new ExampleUCT().supportsGame(game);}))
+//			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
 		if (!AIRegistry.registerAI("Maria Alpha-BetaAI", () -> {return new AlphaBetaAI();}, (game) -> {return true;}))
 			System.err.println("WARNING! Failed to register AI because one with that name already existed!");
 

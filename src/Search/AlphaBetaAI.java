@@ -91,14 +91,15 @@ public class AlphaBetaAI extends AI
                     bestMove = move;
                     bestScore = score;
                 }
-                if(score>alpha)alpha=score;
+                if(score>alpha){alpha=score;}
 
-                if (alpha > beta) {
+                if (score >= beta) {
                     System.out.println("alpha:"+alpha+" beta:"+ beta);
                     System.out.println("cut-off");// beta cut-off
                     break;
                 }
             }
+            System.out.println("Best Move! "+ bestMove + " score of move " + bestScore);
             return bestScore;
 
     }
@@ -148,7 +149,8 @@ public class AlphaBetaAI extends AI
                 final Context copyContext = copyContext(context);
                 move = root_move_sort.get(i);
                 game.apply(copyContext, move);
-                float value = -alphaBeta(game,copyContext, realDepth, -beta, -alpha);
+                
+                float value = -alphaBeta(game,copyContext, realDepth, -beta,-alpha);
                 moveScores.add(value);
                 System.out.println(value);
                 if (System.currentTimeMillis() >= stopTime) {
@@ -161,11 +163,11 @@ public class AlphaBetaAI extends AI
                     best_move = move;
 
                 }
-                alpha = Math.max(alpha, score);
+                if(score>alpha){alpha=score;}
                 System.out.println("Valdiation please");
                 System.out.println(score);
                 System.out.println("LL"+value);
-                if (alpha >= beta) {
+                if (score >= beta) {
                     break;
                 }
 
@@ -209,7 +211,7 @@ public class AlphaBetaAI extends AI
             }
             scored_moves.clear();
         }
-        System.out.println("It extited the while"+best_move_full_search);
+        System.out.println("It extited the while"+best_move_full_search+" score "+ score_full_search);
         return best_move_full_search;
 
     }
@@ -232,6 +234,7 @@ public class AlphaBetaAI extends AI
             }
         }
     }
+
 
 }
 
