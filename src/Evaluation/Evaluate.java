@@ -160,7 +160,7 @@ public class Evaluate {
             while (!leadingplayer_1.isEmpty()) {
                 int player1row = leadingplayer_1.max() / 9;
                 if (player1row == 0) {
-                    score_player1 = score_player1 + 50.0f;
+                    score_player1 = score_player1 + 70.0f;
                     score_player2 = score_player2 - 50.0f;
                 }
                 leadingplayer_1.remove(leadingplayer_1.max());
@@ -168,7 +168,7 @@ public class Evaluate {
             while (!leadingplayer_2.isEmpty()) {
                 int player2row = leadingplayer_2.max() / 9;
                 if (player2row == 8) {
-                    score_player1 = score_player1 - 50.0f;
+                    score_player1 = score_player1 - 70.0f;
                     score_player2 = score_player2 + 50.0f;
                 }
                 leadingplayer_2.remove(leadingplayer_2.max());

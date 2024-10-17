@@ -12,6 +12,7 @@ import other.AI;
 import Evaluation.Evaluate;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import TranspositionTable.*;
 
 public class AlphaBetaAI extends AI
 {
@@ -23,10 +24,24 @@ public class AlphaBetaAI extends AI
     public static final float inBeta= BETA_INIT;
     protected FastArrayList<Move> current_root_moves = null;
     protected FastArrayList<Move> root_move_sort = null;
+    private TranspositionTable tt;
+//    private HashMap<Long, Move[]> killerMoveMap;
+    public int C = 3;  // Number of cutoffs needed to prune
+    public int M = 10; // Maximum number of shallow searches
+    public int R = 2;
+
+
+
+
+
 
     public AlphaBetaAI()
     {
         this.friendlyName = "Maria Alpha-Beta AI";
+        tt = new TranspositionTable(16);  // Initialize TT with 2^16 entries
+        tt.allocate();
+
+
     }
 
     @Override
@@ -36,7 +51,7 @@ public class AlphaBetaAI extends AI
                     final Context context,
                     final double maxSeconds,
                     final int maxIterations,
-                    final int maxDepth
+                    int maxDepth
             ) {
         double bestScore = -1000;
         Move bestMove = null;
@@ -70,14 +85,43 @@ public class AlphaBetaAI extends AI
         final int mover = state.playerToAgent(state.mover());/** determine which player turn is*/
         FastArrayList<Move> legalMoves = game.moves(context).moves(); /** getting the legal moves*/
         final int numLegalMoves = legalMoves.size();
+
         /** Check for terminal state or depth limit*/
         if (context.trial().over() || depth == 0) {
             System.out.println("Game has ended while player: "+mover+" Had: "+numLegalMoves+" Moves");
             return evaluator.evaluate(game,context);
         }
+        if (depth-1-R >=0) {
+            Float beta_multi = multiCut(game, context, depth, alpha, beta, C, M, R);
+            if(beta_multi != null){
+                return beta; // If multi-cut succeeds, we return beta for pruning
+            }
+        }
+
+        float oldAlpha = alpha;
+        long fullHash = context.state().fullHash();
+
+        // Transposition Table check
+        TableData ttEntry = tt.retrieve(fullHash);
+        if (ttEntry != null && ttEntry.depth >= depth) {
+            // Use the TT entry if the stored depth is sufficient
+            if (ttEntry.boundType == TTBounds.EXACT_VALUE) {
+                return ttEntry.value;  // Exact value found, return it
+            } else if (ttEntry.boundType == TTBounds.LOWER_BOUND) {
+                alpha = Math.max(alpha, ttEntry.value);  // Update alpha
+            } else if (ttEntry.boundType == TTBounds.UPPER_BOUND) {
+                beta = Math.min(beta, ttEntry.value);  // Update beta
+            }
+            if (alpha >= beta) {
+                return ttEntry.value;  // Cut-off if alpha >= beta
+            }
+        }
+
         Move bestMove = legalMoves.get(0);
         Move worseMove = legalMoves.get(0);
 //        final int numLegalMoves = legalMoves.size();
+
+
 
         float bestScore = ALPHA_INIT;
 //        float score = ALPHA_INIT;
@@ -95,10 +139,22 @@ public class AlphaBetaAI extends AI
 
                 if (score >= beta) {
                     System.out.println("alpha:"+alpha+" beta:"+ beta);
-                    System.out.println("cut-off");// beta cut-off
+                    System.out.println("cut-off");
                     break;
                 }
             }
+
+            byte boundType;
+            if (bestScore <= oldAlpha) {
+                boundType = TTBounds.UPPER_BOUND;  // Fail-low result (alpha cut-off)
+            } else if (bestScore >= beta) {
+                boundType = TTBounds.LOWER_BOUND;  // Fail-high result (beta cut-off)
+            } else {
+                boundType = TTBounds.EXACT_VALUE;  // Exact result
+            }
+
+            // Store the result in the TT
+            tt.store(bestMove, fullHash, bestScore, depth, boundType);
             System.out.println("Best Move! "+ bestMove + " score of move " + bestScore);
             return bestScore;
 
@@ -215,8 +271,41 @@ public class AlphaBetaAI extends AI
         return best_move_full_search;
 
     }
+    public Float multiCut(Game game, final Context context, final int depth, float alpha, float beta, int C, int M, int R)
+    {
+        int c = 0;  // Count of beta cutoffs
+        int m = 0;  // Count of moves examined
 
-    private class ScoredMove implements Comparable<ScoredMove> {
+        FastArrayList<Move> legalMoves = game.moves(context).moves();
+        Move next = legalMoves.get(0);
+
+        while (next != null && m < M) {
+            final Context shallowContext = copyContext(context);
+            game.apply(shallowContext, next);
+
+            // Perform a shallow search with reduced depth
+            float value = -alphaBeta(game, shallowContext, depth - 1 - R, -beta, -alpha);
+            if (value >= beta)
+            {
+                c++;
+                if (c >= C)
+                {
+                    // If we find at least C cutoffs, we prune and return beta
+                    return beta;
+                }
+            }
+            m++;
+            if (m < legalMoves.size()) {
+                next = legalMoves.get(m);  // Get the next move
+            } else {
+                next = null;  // No more moves to examine
+            }
+
+        }
+        return null;
+    }
+
+            private class ScoredMove implements Comparable<ScoredMove> {
         public final Move move;
         public final double score;
 
