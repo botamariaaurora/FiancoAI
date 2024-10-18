@@ -26,7 +26,7 @@ This repository including the assignment for ISG class. This contain the develop
 * ### Transposition Table
 * ### Multi-Cuts
 
-<img align="right" src="./resources/initboard.png">
+<img align="right" src="./resources/initboard.png" width="200">
 
 
 
